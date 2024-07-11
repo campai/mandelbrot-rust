@@ -137,19 +137,6 @@ fn pixel_to_point(
     }
 }
 
-#[test]
-fn test_pixel_to_point() {
-    assert_eq!(
-        pixel_to_point(
-            (100, 200),
-            (25, 75),
-            Complex { re: -1.0, im: 1.0 },
-            Complex { re: 1.0, im: -1.0 }
-        ),
-        Complex { re: -0.5, im: 0.25 }
-    );
-}
-
 fn parse_pair<T: FromStr>(value: &str, separator: char) -> Option<(T, T)> {
     match value.find(separator) {
         None => None,
@@ -172,13 +159,6 @@ fn parse_pair<T: FromStr>(value: &str, separator: char) -> Option<(T, T)> {
     }
 }
 
-#[test]
-fn test_parse_pair() {
-    assert_eq!(parse_pair::<u32>("", ','), None);
-    assert_eq!(parse_pair::<u32>("123,0", ','), Some((123, 0)));
-    assert_eq!(parse_pair::<f64>("0.12,0.1", ','), Some((0.12, 0.1)));
-}
-
 fn parse_complex(value: &str) -> Option<Complex<f64>> {
     match parse_pair(value, ',') {
         Some((re, im)) => Some(Complex { re, im }),
@@ -186,18 +166,43 @@ fn parse_complex(value: &str) -> Option<Complex<f64>> {
     }
 }
 
-#[test]
-fn test_parse_complex() {
-    assert_eq!(
-        parse_complex("0.12,0.1"),
-        Some(Complex { re: 0.12, im: 0.1 })
-    );
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    assert_eq!(
-        parse_complex("-0.12,-0.1"),
-        Some(Complex {
-            re: -0.12,
-            im: -0.1
-        })
-    );
+    #[test]
+    fn test_parse_complex() {
+        assert_eq!(
+            parse_complex("0.12,0.1"),
+            Some(Complex { re: 0.12, im: 0.1 })
+        );
+
+        assert_eq!(
+            parse_complex("-0.12,-0.1"),
+            Some(Complex {
+                re: -0.12,
+                im: -0.1
+            })
+        );
+    }
+
+    #[test]
+    fn test_parse_pair() {
+        assert_eq!(parse_pair::<u32>("", ','), None);
+        assert_eq!(parse_pair::<u32>("123,0", ','), Some((123, 0)));
+        assert_eq!(parse_pair::<f64>("0.12,0.1", ','), Some((0.12, 0.1)));
+    }
+
+    #[test]
+    fn test_pixel_to_point() {
+        assert_eq!(
+            pixel_to_point(
+                (100, 200),
+                (25, 75),
+                Complex { re: -1.0, im: 1.0 },
+                Complex { re: 1.0, im: -1.0 }
+            ),
+            Complex { re: -0.5, im: 0.25 }
+        );
+    }
 }
