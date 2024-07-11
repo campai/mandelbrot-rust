@@ -1,0 +1,13 @@
+[package]
+name = "mandelbrot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+num-complex = "0.4.4"
+image = "0.24.8"
+crossbeam = "0.8.4"
+
+[profile.release]
+opt-level = 3
+strip = true
